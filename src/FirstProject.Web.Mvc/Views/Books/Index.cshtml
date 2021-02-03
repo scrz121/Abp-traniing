@@ -1,0 +1,112 @@
+﻿@using FirstProject.Web.Startup
+@model FirstProject.Web.Models.Books.IndexViewModel
+
+@{
+    ViewBag.Title = L("BookList");
+    ViewBag.CurrentPageName = PageNames.BookList; //Matches with the menu name in SimpleTaskAppNavigationProvider to highlight the menu item
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@L("BookList")</h1>
+            </div>
+            <div class="col-sm-6">
+                <a href="javascript:;" data-toggle="modal" data-target="#BookCreateModal" class="btn bg-blue float-sm-right">
+                    <i class="fa fa-plus-square"></i>
+                    @L("AddNew")
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt-3">
+        <div class="row justify-content-end">
+            <span class="pull-right">
+                <select id="BookCategoryCombobox" class="form-control" asp-items=Model.GetCategorySelectListItems()>
+                    <option selected value="">@L("AllCategories")</option>
+                </select>
+            </span>
+            <span class="pull-right ml-2">
+                <select id="BookStateCombobox" class="form-control" asp-items=Model.GetBooksStateSelectListItems(LocalizationManager)>
+                    <option selected value="">@L("AllBooks")</option>
+                </select>
+            </span>
+            <span class="pull-right ml-2">
+                <select id="BookPublisherCombobox" class="form-control" asp-items=Model.GetPublisherSelectListItems()>
+                    <option selected value="">All Publisher</option>
+                </select>
+            </span>
+            <span class="pull-right ml-2">
+                <select id="BookYearCombobox" class="form-control" asp-items=Model.GetYearSelectListItems()>
+                    <option selected value="">All Year</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!--Use for bulk actions-->
+                            </div>
+                            <div class="col-md-6">
+                                @await Html.PartialAsync("~/Views/Books/Index.AdvancedSearch.cshtml")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="BooksTable" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>@L("Title")</th>
+                                        <th>@L("InventoryNumber")</th>
+                                        <th>@L("BookState")</th>
+                                        <th>@L("CoverImage")</th>
+                                        <th style="width: 150px">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("~/Views/Books/_CreateModal.cshtml",Model)
+
+<div class="modal fade" id="BookEditModal" tabindex="-1" role="dialog" aria-labelledby="BookEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <environment names="Development">
+        <script src="~/js/views/books/index.js" asp-append-version="true"></script>
+        <script src="~/js/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+        <script>
+            jQuery('#datetimepicker').datetimepicker();
+        </script>
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/js/views/books/index.js" asp-append-version="true"></script>
+        <script src="~/js/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+        <script>
+            jQuery('#datetimepicker').datetimepicker();
+        </script>
+    </environment>
+}

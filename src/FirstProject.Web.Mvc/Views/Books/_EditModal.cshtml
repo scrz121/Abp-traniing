@@ -1,0 +1,97 @@
+﻿@using FirstProject.Web.Models.Common.Modals
+@using FirstProject.Web.Models.Books
+@model EditBookModalViewModel
+@{ Layout = null; }
+@await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditBook")))
+<form name="BookEditForm" role="form" class="form-horizontal">
+    <input type="hidden" name="Id" value="@Model.Book.Id" />
+    <input type="hidden" name="CoverImage" value="@Model.Book.CoverImage" />
+    <div class="modal-body">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" role="tab" href="#edit-book-details">@L("BookDetails")</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" role="tab" href="#edit-book-categories">@L("Categories")</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-4">
+                <div role="tabpanel" class="tab-pane container active" id="edit-book-details">
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" style="align-self: flex-end;" for="username">@L("CoverImage")</label>
+                        <div class="col-md-9">
+                            <div id="image-edit-thumbnail">
+                                <img style="height:100px" src="@Model.Book.CoverImage" id="editThumbnail" alt="Cover image">
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="form-control custom-file-input" name="CoverImageFile" id="input-edit-cover-image" />
+                                <label class="custom-file-label">Choose image</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="username">@L("Title")</label>
+                        <div class="col-md-9">
+                            <input id="title" type="text" class="form-control" name="Title" value="@Model.Book.Title" required minlength="2">
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="name">@L("Description")</label>
+                        <div class="col-md-9">
+                            <input id="Description" type="text" class="form-control" name="Description" value="@Model.Book.Description" required>
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="surname">@L("InventoryNumber")</label>
+                        <div class="col-md-9">
+                            <input id="InventoryNumber" type="number" class="form-control" name="InventoryNumber" value="@Model.Book.InventoryNumber" required>
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="surname">@L("BookState")</label>
+                        <div class="col-md-9">
+                            <select class="form-control" name="State" asp-items=Model.GetBooksStateSelectListItems(LocalizationManager)>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="surname">@L("Publisher")</label>
+                        <div class="col-md-9">
+                            <select class="form-control" name="PublisherId" asp-items=Model.GetPublisherSelectListItems()>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row required">
+                        <label class="col-md-3 col-form-label" for="surname">@L("PublishDate")</label>
+                        <div class="col-md-9">
+                            <input id="editDatetimepicker" type="text" class="form-control" value="@Model.Book.PublishDate" readonly name="PublishDate" required>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane container" id="edit-book-categories">
+                    <div class="row">
+                        @foreach (var c in Model.checkBoxCategories)
+                        {
+                        <div class="col-md-6">
+                            @if (c.Selected == true)
+                            {
+                                <input type="checkbox" name="Category" id="edit-category-@c.Id" value="@c.Id" checked/>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="Category" id="edit-category-@c.Id" value="@c.Id" />
+                            }
+                            <label for="edit-category-@c.Id">@c.Name</label>
+                        </div>
+                        }
+                    </div>
+                </div>
+        </div>
+        @await Html.PartialAsync("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+        </div>
+</form>
+
+<script>
+    jQuery(' #editDatetimepicker').datetimepicker();
+</script>
+<script src="~/js/views/books/_EditModal.js" asp-append-version="true"></script>

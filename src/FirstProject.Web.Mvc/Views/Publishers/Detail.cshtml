@@ -1,0 +1,73 @@
+﻿@using FirstProject.Web.Startup
+@using FirstProject.Publishers.Dto
+@model FirstProject.Web.Models.Publishers.IndexViewModel
+
+@{
+    PublisherDto publisher = ViewBag.Publisher;
+    ViewBag.Title = L("PublisherDetail");
+    ViewBag.CurrentPageName = PageNames.PublisherList; //Matches with the menu name in SimpleTaskAppNavigationProvider to highlight the menu item
+}
+@if (publisher != null)
+{
+    <input type="hidden" value="@publisher.Id" id="PubId" />
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h1>Detail</h1>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-3">
+            <div class="row justify-content-end">
+                <span class="pull-right">
+                    <select id="BookCategoryCombobox" class="form-control" asp-items=Model.GetCategorySelectListItems()>
+                        <option selected value="">@L("AllCategories")</option>
+                    </select>
+                </span>
+                <span class="pull-right ml-2">
+                    <select id="BookYearCombobox" class="form-control" asp-items=Model.GetYearSelectListItems()>
+                        <option selected value="">All Year</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="table-responsive">
+            <table id="PublishersTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>@L("PublisherName")</th>
+                        <th>Số lượng sách</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@publisher.Id</td>
+                        <td>@publisher.PublisherName</td>
+                        <td id="CountBoook"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    @section scripts
+{
+        <environment names="Development">
+            <script src="~/js/views/publishers/countBook.js" asp-append-version="true"></script>
+        </environment>
+
+        <environment names="Staging,Production">
+            <script src="~/js/views/publishers/countBook.js" asp-append-version="true"></script>
+        </environment>
+    }
+
+}
+else
+{
+    <h1 class="text-center primary">Không tìm thấy nhà xuất bản!</h1>
+}
